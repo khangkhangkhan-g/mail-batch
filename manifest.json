@@ -1,0 +1,71 @@
+{
+  "manifest_version": 3,
+  "name": "MailBatch for Gmail",
+  "version": "1.6.0",
+  "description": "Personalized Gmail drafts and cloud/local scheduled sends with bilingual UI, keywords, rich-text formatting, hyperlinks, banners, and per-recipient attachments.",
+  "minimum_chrome_version": "114",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4rP8KYgN0MYLM3dUqDhBygjcLwIQI4YShZL0Cj8KBK/zP/uhbgZgv0HPVzrFKg2VinH+NQCxg2vpDIZcF8gtsiBknV/HSi5JBnAs1pq8gpnIa5AaK6sdRjIU1Apcl5sFTJNSDhvGH/1egi0NOs1PQop89qQB0SxcuGwl+jxK4Up+GXPyTOF7MBGAw1CebKmOHRgoR3klaiYUwKXhiz54nTy3M375MSbUa6/LCEHp9Wa6ubCrHF5UmyYoQm/zKvFVPuP2r2LiRXnAZ6zlIWdgQAXXYrLbkwVwk+P55c3i17s7NukxStkiMAb1OJkmU4VWyBUfG+49xKjiNsaCTHjHswIDAQAB",
+  "permissions": [
+    "identity",
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://gmail.googleapis.com/*",
+    "https://www.googleapis.com/*"
+  ],
+  "oauth2": {
+    "client_id": "REPLACE_WITH_YOUR_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.compose"
+    ]
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "app.html",
+        "app.css",
+        "app.js",
+        "icons/*"
+      ],
+      "matches": [
+        "https://mail.google.com/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "Open MailBatch in Gmail",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "optional_host_permissions": [
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*"
+  ]
+}

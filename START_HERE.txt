@@ -1,0 +1,142 @@
+MAILBATCH FOR GMAIL V1.6
+Developer: Nguyen Khang
+
+============================================================
+TIẾNG VIỆT - BẮT ĐẦU NHANH
+============================================================
+
+NẾU BẠN ĐANG DÙNG V1.0-V1.4:
+1. KHÔNG xóa extension cũ.
+2. Giải nén package V1.6.
+3. Chạy UPDATE_EXISTING.bat.
+4. Chọn đúng folder MailBatch mà Chrome đang Load unpacked.
+5. Mở chrome://extensions -> bấm Reload ở MailBatch.
+6. Quay lại Gmail -> Ctrl+Shift+R.
+
+Updater sẽ giữ OAuth Client ID + extension key cũ. Thông thường KHÔNG cần tạo lại Google Cloud project, OAuth Client, Test User hoặc consent screen.
+
+CÀI MỚI HOÀN TOÀN:
+1. Giải nén package.
+2. Mở chrome://extensions.
+3. Bật Developer mode.
+4. Chọn Load unpacked -> chọn folder có manifest.json.
+5. Nếu Google Cloud chặn truy cập, bật 2-Step Verification/MFA cho tài khoản Google.
+6. Tạo Google Cloud project.
+7. Enable Gmail API.
+8. Google Auth Platform -> Branding/Audience -> thêm Gmail của bạn vào Test users nếu app đang ở Testing.
+9. Google Auth Platform -> Clients -> Create OAuth client -> Chrome Extension.
+10. Item ID = Extension ID hiện trong chrome://extensions.
+11. Copy OAuth Client ID có đuôi .apps.googleusercontent.com.
+12. Chạy PATCH_OAUTH_CLIENT_ID.bat -> paste Client ID.
+13. Reload extension và refresh Gmail.
+14. MailBatch -> Kết nối -> chọn đúng Gmail -> Allow/Continue.
+
+V1.5 - NGÔN NGỮ VÀ LAUNCHER:
+- Dropdown EN/VI ở header đổi toàn bộ giao diện chính.
+- Lựa chọn ngôn ngữ được nhớ cho lần mở sau.
+- Chip MailBatch trên Gmail có thể kéo tự do trong vùng màn hình.
+- Thả chip ở đâu thì MailBatch sẽ nhớ vị trí đó.
+- Bấm chip vẫn mở panel cố định ở cạnh phải như trước.
+
+FILE, BANNER VÀ CÁ NHÂN HÓA:
+- Keyword có dạng {{Name}}, {{Time}}, {{MeetLink}}...
+- Banner hỗ trợ PNG/JPG/GIF/WebP ở đầu email.
+- Attachments -> Tất cả: file chung cho mọi người.
+- Attachments -> Từng người: chọn recipient và gán file riêng.
+- Giới hạn được tính riêng từng email: banner + file chung + file riêng của recipient đó.
+
+HẸN GIỜ:
+- Cloud: dùng khi máy có thể tắt/sleep.
+- MailBatch tạo Gmail Draft trước, sau đó Google Apps Script của CHÍNH BẠN gửi draft vào giờ đã hẹn.
+- Email nằm trong Drafts đến lúc gửi. Đây KHÔNG phải thư mục Scheduled native của Gmail.
+- Local: chế độ dự phòng, Chrome và máy phải còn awake.
+
+CLOUD SETUP:
+1. MailBatch -> Hẹn giờ -> Cloud -> Thiết lập.
+2. Trong popup, chọn English/Tiếng Việt nếu cần.
+3. Làm lần lượt từng step card trong popup.
+4. Dùng nút Sao chép script để copy cloud/CLOUD_SCHEDULER.gs.
+5. Deploy Apps Script thành Web app và dùng URL kết thúc bằng /exec, không dùng /dev.
+6. Paste Web App URL + MAILBATCH CLOUD SECRET.
+7. Bấm Kiểm tra. Chỉ khi test thành công mới dùng Cloud cho email thật.
+8. Dùng CÙNG MỘT Gmail account cho Apps Script và MailBatch.
+
+HƯỚNG DẪN CHI TIẾT:
+- Trong MailBatch bấm Hướng dẫn -> Tiếng Việt
+- docs/README_VI.md
+- docs/TRUST_SAFETY_VI.md
+- docs/DEVELOPER_VI.md
+
+============================================================
+ENGLISH - QUICK START
+============================================================
+
+IF YOU ALREADY USE V1.0-V1.4:
+1. Do NOT remove the existing extension.
+2. Extract the V1.6 package.
+3. Run UPDATE_EXISTING.bat.
+4. Select the folder Chrome currently loads as MailBatch.
+5. Open chrome://extensions -> Reload MailBatch.
+6. Return to Gmail -> Ctrl+Shift+R.
+
+The updater preserves your OAuth Client ID and extension key. You normally do NOT repeat the Google Cloud project, OAuth client, Test User, or consent-screen setup.
+
+FRESH INSTALL:
+1. Extract the package.
+2. Open chrome://extensions.
+3. Enable Developer mode.
+4. Choose Load unpacked -> select the folder containing manifest.json.
+5. Enable 2-Step Verification/MFA if Google Cloud requires it.
+6. Create a Google Cloud project.
+7. Enable Gmail API.
+8. Google Auth Platform -> Branding/Audience -> add your Gmail under Test users while the app is in Testing.
+9. Google Auth Platform -> Clients -> Create OAuth client -> Chrome Extension.
+10. Item ID = the Extension ID shown at chrome://extensions.
+11. Copy the OAuth Client ID ending in .apps.googleusercontent.com.
+12. Run PATCH_OAUTH_CLIENT_ID.bat and paste the Client ID.
+13. Reload the extension and refresh Gmail.
+14. MailBatch -> Connect -> choose the correct Gmail -> Allow/Continue.
+
+V1.5 - LANGUAGE AND LAUNCHER:
+- The EN/VI dropdown in the header switches the main interface language.
+- The language choice is remembered.
+- The MailBatch launcher chip on Gmail can be dragged anywhere inside the viewport.
+- The chip position is remembered.
+- Clicking the chip still opens the same fixed right-side panel.
+
+FILES, BANNER, AND PERSONALIZATION:
+- Keywords use forms such as {{Name}}, {{Time}}, and {{MeetLink}}.
+- Banner supports PNG/JPG/GIF/WebP above the email body.
+- Attachments -> All emails: common files for everyone.
+- Attachments -> Per person: select a recipient and assign different files.
+- Limits are calculated per message: banner + common files + that recipient's files.
+
+SCHEDULING:
+- Cloud: use when the computer may be off or asleep.
+- MailBatch creates Gmail Drafts first. Your own Google Apps Script sends those draft IDs later.
+- Messages remain in Drafts until send time. This is NOT Gmail's native Scheduled folder.
+- Local: fallback mode. Chrome and the computer must remain awake.
+
+CLOUD SETUP:
+1. MailBatch -> Schedule -> Cloud -> Setup.
+2. Choose English/Tiếng Việt inside the popup if needed.
+3. Follow each step card in order.
+4. Use Copy script to copy cloud/CLOUD_SCHEDULER.gs.
+5. Deploy Apps Script as a Web app and use the URL ending in /exec, not /dev.
+6. Paste the Web App URL + MAILBATCH CLOUD SECRET.
+7. Press Test. Use Cloud for real mail only after the test succeeds.
+8. Use the SAME Gmail account for Apps Script and MailBatch.
+
+DETAILED GUIDES:
+- In MailBatch click Guide -> English
+- docs/README_EN.md
+- docs/TRUST_SAFETY_EN.md
+- docs/DEVELOPER_EN.md
+
+
+V1.6 - HYPERLINKS / LIÊN KẾT:
+- Bôi đen text trong Message > Ctrl+K > nhập link > Apply.
+- Có thể dùng nút hình mắt xích trên thanh format.
+- Nếu con trỏ đang nằm trong link cũ, Ctrl+K cho phép sửa hoặc gỡ link.
+- Select text in Message > Ctrl+K > enter the link > Apply.
+- The chain-link toolbar button opens the same dialog.

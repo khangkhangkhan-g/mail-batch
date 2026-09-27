@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MailBatch</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="brand-row">
+          <h1>MailBatch</h1>
+          <span class="version">Gmail V1.6</span>
+        </div>
+        <div id="accountStatus" class="account-status" data-i18n="gmail_not_connected">Gmail not connected</div>
+      </div>
+      <div class="header-actions">
+        <select id="languageSelect" class="language-select" title="Interface language" aria-label="Interface language">
+          <option value="en">EN</option>
+          <option value="vi">VI</option>
+        </select>
+        <button id="guideBtn" class="btn ghost" data-i18n="guide" data-i18n-title="guide_title">Guide</button>
+        <button id="connectBtn" class="btn secondary" data-i18n="connect" data-i18n-title="connect_title">Connect</button>
+        <button id="closeBtn" class="icon-btn" data-i18n-title="close_mailbatch" data-i18n-aria="close_mailbatch" title="Close MailBatch" aria-label="Close MailBatch">×</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <h2 data-i18n="recipients">Recipients</h2>
+            <p data-i18n="recipients_help">Each row creates one personalized email.</p>
+          </div>
+          <div class="toolbar">
+            <button id="addRowBtn" class="btn secondary" data-i18n="add_row" data-i18n-title="add_row_title">Add row</button>
+            <button id="addKeywordBtn" class="btn secondary" data-i18n="add_keyword" data-i18n-title="add_keyword_title">Add keyword</button>
+            <button id="pasteBtn" class="btn secondary" data-i18n="paste" data-i18n-title="paste_title">Paste</button>
+            <button id="importBtn" class="btn secondary" data-i18n="import" data-i18n-title="import_csv_title">Import</button>
+            <input id="csvInput" type="file" accept=".csv,text/csv" hidden />
+          </div>
+        </div>
+        <div id="gridWrap" class="grid-wrap"></div>
+        <div class="small-row">
+          <span id="recipientCount">0 recipients</span>
+          <button id="clearRowsBtn" class="link-btn danger-text" data-i18n="clear_rows">Clear rows</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head compact">
+          <div>
+            <h2 data-i18n="compose">Compose</h2>
+            <p data-i18n-html="compose_help">Keywords such as <code>{{Name}}</code> are replaced with values from each recipient row.</p>
+          </div>
+        </div>
+
+        <label class="field-label" for="subjectInput" data-i18n="subject">Subject</label>
+        <input id="subjectInput" class="text-input" type="text" data-i18n-placeholder="subject_placeholder" placeholder="Interview invitation - {{Name}}" />
+
+        <label class="field-label" for="bodyEditor" data-i18n="message">Message</label>
+        <div class="editor-shell">
+          <div id="editorToolbar" class="editor-toolbar" role="toolbar" data-i18n-aria="message_formatting" aria-label="Message formatting">
+            <select id="fontSelect" class="format-select wide" title="Font" aria-label="Font">
+              <option value="Arial">Sans Serif</option>
+              <option value="Arial Black">Arial Black</option>
+              <option value="Calibri">Calibri</option>
+              <option value="Cambria">Cambria</option>
+              <option value="Comic Sans MS">Comic Sans</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Garamond">Garamond</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Impact">Impact</option>
+              <option value="Lucida Sans Unicode">Lucida Sans</option>
+              <option value="Palatino Linotype">Palatino</option>
+              <option value="Segoe UI">Segoe UI</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+            <select id="sizeSelect" class="format-select size-select" title="Text size" aria-label="Text size">
+              <option value="2" data-i18n="size_small">Small</option>
+              <option value="3" selected data-i18n="size_normal">Normal</option>
+              <option value="4" data-i18n="size_large">Large</option>
+              <option value="5" data-i18n="size_huge">Huge</option>
+            </select>
+            <span class="toolbar-separator"></span>
+            <button class="format-btn" data-cmd="bold" title="Bold" aria-label="Bold"><strong>B</strong></button>
+            <button class="format-btn italic" data-cmd="italic" title="Italic" aria-label="Italic">I</button>
+            <button class="format-btn underline" data-cmd="underline" title="Underline" aria-label="Underline">U</button>
+            <button id="insertLinkBtn" class="format-btn link-format-btn" type="button" data-i18n-title="insert_link_title" data-i18n-aria="insert_link_title" title="Insert link (Ctrl+K)" aria-label="Insert link (Ctrl+K)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a4 4 0 0 0 5.66 0l2.12-2.12a4 4 0 0 0-5.66-5.66L11.1 7.24"/><path d="M13.8 10.2a4 4 0 0 0-5.66 0l-2.12 2.12a4 4 0 0 0 5.66 5.66l1.22-1.22"/></svg>
+            </button>
+            <div class="color-menu-wrap">
+              <button id="textColorBtn" class="format-btn color-button" type="button" title="Text color" aria-label="Text color" aria-haspopup="true" aria-expanded="false"><span class="color-a">A</span><span class="tiny-caret">▾</span></button>
+              <div id="textColorPopover" class="color-popover hidden" role="dialog" aria-label="Text color palette">
+                <div class="color-popover-title" data-i18n="text_color">Text color</div>
+                <div id="textColorPalette" class="color-grid"></div>
+              </div>
+            </div>
+            <span class="toolbar-separator"></span>
+            <button class="format-btn align-icon align-left" data-cmd="justifyLeft" title="Align left" aria-label="Align left"><span></span><span></span><span></span></button>
+            <button class="format-btn align-icon align-center" data-cmd="justifyCenter" title="Align center" aria-label="Align center"><span></span><span></span><span></span></button>
+            <button class="format-btn align-icon align-right" data-cmd="justifyRight" title="Align right" aria-label="Align right"><span></span><span></span><span></span></button>
+            <button class="format-btn" data-cmd="insertOrderedList" title="Numbered list" aria-label="Numbered list">1.</button>
+            <button class="format-btn" data-cmd="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list">•</button>
+            <button class="format-btn" data-cmd="outdent" title="Outdent" aria-label="Outdent">⇤</button>
+            <button class="format-btn" data-cmd="indent" title="Indent" aria-label="Indent">⇥</button>
+            <button class="format-btn" data-cmd="formatBlock" data-value="blockquote" title="Quote" aria-label="Quote">❞</button>
+            <button class="format-btn strike" data-cmd="strikeThrough" title="Strikethrough" aria-label="Strikethrough">S</button>
+            <button class="format-btn clear-format" data-cmd="removeFormat" title="Clear formatting" aria-label="Clear formatting">Tx</button>
+          </div>
+          <div id="bodyEditor" class="body-editor" contenteditable="true" role="textbox" aria-multiline="true" data-i18n-data-placeholder="body_placeholder" data-placeholder="Hi {{Name}},\n\nYour interview is at {{Time}} on {{Date}}."></div>
+        </div>
+
+        <div class="keywords-block">
+          <div class="keyword-head">
+            <span class="field-label inline-label" data-i18n="keywords">Keywords</span>
+            <span class="muted-note" data-i18n="keywords_help">Click a keyword to insert it.</span>
+          </div>
+          <div id="keywordChips" class="chips"></div>
+        </div>
+
+        <div class="assets-block">
+          <div class="asset-section banner-section">
+            <div class="attachment-head">
+              <div>
+                <span class="field-label inline-label" data-i18n="banner">Banner</span>
+                <span class="muted-note" data-i18n="banner_help">Optional PNG/JPG/GIF/WebP shown above the email body.</span>
+              </div>
+              <button id="addBannerBtn" class="btn secondary" type="button" data-i18n="add_banner" data-i18n-title="banner_button_title">Add banner</button>
+              <input id="bannerInput" type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden />
+            </div>
+            <div id="bannerPreview" class="banner-preview empty">
+              <span data-i18n="no_banner">No banner</span>
+            </div>
+          </div>
+
+          <div class="asset-section attachments-block">
+            <div class="attachment-head attachment-title-row">
+              <div>
+                <span class="field-label inline-label" data-i18n="attachments">Attachments</span>
+                <span class="muted-note" data-i18n="attachments_help">Use common files or assign different files per recipient.</span>
+              </div>
+              <div class="mini-tabs" role="group" aria-label="Attachment mode">
+                <button id="commonAttachmentsTab" class="mini-tab active" type="button" data-i18n="all_emails">All emails</button>
+                <button id="personAttachmentsTab" class="mini-tab" type="button" data-i18n="per_person">Per person</button>
+              </div>
+            </div>
+
+            <div id="commonAttachmentsPanel" class="attachment-mode-panel">
+              <div class="attachment-actions-row">
+                <span class="muted-note" data-i18n="common_files_help">These files go to every recipient.</span>
+                <button id="addAttachmentBtn" class="btn secondary" type="button" data-i18n="add_files" data-i18n-title="add_common_files_title">Add files</button>
+                <input id="attachmentInput" type="file" multiple hidden />
+              </div>
+              <div id="attachmentDropZone" class="attachment-drop compact-drop" tabindex="0" role="button" aria-label="Drop common files here or choose files">
+                <strong data-i18n="drop_files">Drop files here</strong>
+                <span data-i18n="for_every_email">for every email</span>
+              </div>
+              <div id="attachmentList" class="attachment-list"></div>
+              <div class="attachment-summary">
+                <span id="attachmentSizeSummary">0 B common</span>
+                <span id="attachmentBatchEstimate" class="muted-note">No common files.</span>
+              </div>
+            </div>
+
+            <div id="personAttachmentsPanel" class="attachment-mode-panel hidden">
+              <div class="person-file-picker">
+                <label class="field-label" for="personAttachmentSelect" data-i18n="recipient">Recipient</label>
+                <select id="personAttachmentSelect" class="text-input compact-select"></select>
+                <button id="addPersonAttachmentBtn" class="btn secondary" type="button" data-i18n="add_files" data-i18n-title="add_person_files_title">Add files</button>
+                <input id="personAttachmentInput" type="file" multiple hidden />
+              </div>
+              <div id="personAttachmentList" class="attachment-list"></div>
+              <div class="attachment-summary">
+                <span id="personAttachmentSizeSummary">0 B for this recipient</span>
+                <span id="personAttachmentTotalSummary" class="muted-note">25 MB max per email including common files and banner.</span>
+              </div>
+            </div>
+
+            <div class="attachment-note" data-i18n="attachment_limit_note">The 25 MB check is calculated separately for each email: banner + common files + that recipient's files. Workspace administrators may set different limits.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head compact">
+          <div>
+            <h2 data-i18n="preview">Preview</h2>
+            <p data-i18n="preview_help">Review the exact email before creating drafts or scheduling sends.</p>
+          </div>
+          <div class="toolbar">
+            <button id="prevPreviewBtn" class="btn secondary" data-i18n="prev" data-i18n-title="previous_recipient">Prev</button>
+            <button id="nextPreviewBtn" class="btn secondary" data-i18n="next" data-i18n-title="next_recipient">Next</button>
+          </div>
+        </div>
+
+        <div id="preflightSummary" class="preflight neutral" data-i18n="preflight_initial">Run a check before processing the batch.</div>
+        <div class="preview-card">
+          <div class="preview-meta"><span data-i18n="to">To</span><strong id="previewTo">-</strong></div>
+          <div class="preview-meta"><span data-i18n="subject">Subject</span><strong id="previewSubject">-</strong></div>
+          <div class="preview-divider"></div>
+          <div id="previewBody" class="preview-body" data-i18n="no_recipient_selected">No recipient selected.</div>
+        </div>
+        <div class="action-row">
+          <button id="preflightBtn" class="btn secondary" data-i18n="check" data-i18n-title="check_title">Check</button>
+          <button id="createDraftsBtn" class="btn primary" data-i18n="drafts" data-i18n-title="drafts_title">Drafts</button>
+          <button id="openDraftsBtn" class="btn secondary" data-i18n="open_drafts" data-i18n-title="open_drafts_title">Open Drafts</button>
+        </div>
+        <div id="draftProgress" class="status-line"></div>
+      </section>
+
+      <section class="card schedule-card">
+        <div class="section-head compact">
+          <div>
+            <h2 data-i18n="schedule">Schedule</h2>
+            <p data-i18n="schedule_help">Choose a date and time using your browser's local time zone.</p>
+          </div>
+          <div class="local-clock-wrap">
+            <div id="localClock" class="local-clock">--:--</div>
+            <div id="timezoneLabel" class="timezone-label" data-i18n="local_time">Local time</div>
+          </div>
+        </div>
+
+        <div class="schedule-mode" role="group" aria-label="Schedule mode">
+          <button id="sameTimeModeBtn" class="mode-btn active" type="button" data-i18n="same_time">Same time</button>
+          <button id="perPersonModeBtn" class="mode-btn" type="button" data-i18n="per_person">Per person</button>
+        </div>
+
+        <div id="sameTimePanel" class="schedule-panel">
+          <div class="schedule-picker-grid">
+            <div class="schedule-field">
+              <label class="field-label" data-i18n="date">Date</label>
+              <button id="datePickerBtn" class="picker-btn" type="button" aria-haspopup="dialog">
+                <span id="datePickerText" data-i18n="choose_date">Choose date</span>
+                <span aria-hidden="true">▾</span>
+              </button>
+              <div id="calendarPopover" class="calendar-popover hidden" role="dialog" aria-label="Choose send date">
+                <div class="calendar-head">
+                  <button id="calendarPrevBtn" class="calendar-nav" type="button" aria-label="Previous month">‹</button>
+                  <strong id="calendarMonthLabel"></strong>
+                  <button id="calendarNextBtn" class="calendar-nav" type="button" aria-label="Next month">›</button>
+                </div>
+                <div class="calendar-weekdays" aria-hidden="true">
+                  <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                </div>
+                <div id="calendarDays" class="calendar-days"></div>
+                <div class="calendar-footer">
+                  <button id="todayBtn" class="link-btn" type="button" data-i18n="today">Today</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="schedule-field">
+              <label class="field-label" data-i18n="time">Time</label>
+              <div class="time-picker">
+                <select id="hourSelect" class="time-select" aria-label="Hour"></select>
+                <span class="time-colon">:</span>
+                <select id="minuteSelect" class="time-select" aria-label="Minute"></select>
+                <div class="period-toggle" role="group" aria-label="AM or PM">
+                  <button id="amBtn" class="period-btn active" type="button">AM</button>
+                  <button id="pmBtn" class="period-btn" type="button">PM</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="schedule-summary-box">
+            <div>
+              <span class="summary-label" data-i18n="send">Send</span>
+              <strong id="scheduleSummary" data-i18n="choose_a_date">Choose a date</strong>
+            </div>
+            <span id="scheduleZoneSummary" class="summary-zone"></span>
+          </div>
+        </div>
+
+        <div id="perPersonPanel" class="schedule-panel hidden">
+          <div class="per-person-copy">
+            <strong data-i18n="one_time_per_recipient">One time per recipient</strong>
+            <p data-i18n-html="sendat_help">Use the <code>{{SendAt}}</code> keyword column. Enter values such as <code>2026-09-28 9:00 AM</code>.</p>
+          </div>
+          <button id="ensureSendAtBtn" class="btn secondary" type="button" data-i18n="add_keyword">Add keyword</button>
+        </div>
+
+        <div class="schedule-delivery">
+          <div class="schedule-delivery-head">
+            <div>
+              <span class="field-label inline-label" data-i18n="delivery">Delivery</span>
+              <span id="scheduleBackendStatus" class="muted-note" data-i18n="cloud_not_checked">Cloud setup not checked.</span>
+            </div>
+            <div class="mini-tabs" role="group" aria-label="Schedule delivery method">
+              <button id="cloudScheduleBtn" class="mini-tab active" type="button" data-i18n="cloud">Cloud</button>
+              <button id="localScheduleBtn" class="mini-tab" type="button" data-i18n="local">Local</button>
+            </div>
+          </div>
+          <div id="cloudScheduleNote" class="schedule-note cloud-note">
+            <div data-i18n-html="cloud_note"><strong>Cloud</strong> works while this computer is off. Messages stay in Gmail Drafts until send time; this is not Gmail's native Scheduled folder.</div>
+            <button id="cloudSetupBtn" class="btn secondary" type="button" data-i18n="setup">Setup</button>
+          </div>
+          <div id="localScheduleNote" class="schedule-note hidden">
+            <span data-i18n-html="local_note"><strong>Local</strong> is the fallback scheduler. Chrome and the computer must be awake; missed sends run after the device wakes.</span>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button id="scheduleBtn" class="btn primary" data-i18n="schedule" data-i18n-title="schedule_title">Schedule</button>
+          <button id="refreshQueueBtn" class="btn secondary" data-i18n="refresh" data-i18n-title="refresh_title">Refresh</button>
+        </div>
+
+        <div class="queue-head">
+          <h3 data-i18n="upcoming">Upcoming</h3><span id="queueBackendBadge" class="queue-backend-badge" data-i18n="cloud">Cloud</span>
+          <div id="queueCounts" class="queue-counts">Pending 0 · Sent 0 · Failed 0</div>
+        </div>
+        <div id="queueList" class="queue-list">
+          <div class="queue-empty" data-i18n="nothing_scheduled">Nothing scheduled.</div>
+        </div>
+        <div id="queueActions" class="queue-actions hidden">
+          <button id="cancelPendingBtn" class="link-btn danger-text" data-i18n="cancel_all">Cancel all</button>
+          <button id="retryFailedBtn" class="link-btn" data-i18n="retry">Retry</button>
+        </div>
+      </section>
+
+      <section class="card subtle-card">
+        <div class="section-head compact">
+          <div>
+            <h2 data-i18n="project">Project</h2>
+            <p data-i18n="project_help">Recipient data and templates stay in this Chrome profile. Cloud queue data stays in your own Apps Script when enabled.</p>
+          </div>
+          <div class="toolbar">
+            <button id="exportBtn" class="btn secondary" data-i18n="export" data-i18n-title="export_title">Export</button>
+            <button id="importProjectBtn" class="btn secondary" data-i18n="import" data-i18n-title="import_project_title">Import</button>
+            <input id="projectInput" type="file" accept=".json,application/json" hidden />
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h3 id="modalTitle">MailBatch</h3>
+        <button id="modalCloseBtn" class="icon-btn" data-i18n-aria="close" aria-label="Close">×</button>
+      </div>
+      <div id="modalContent"></div>
+      <div class="modal-actions">
+        <button id="modalCancelBtn" class="btn secondary" data-i18n="cancel">Cancel</button>
+        <button id="modalConfirmBtn" class="btn primary" data-i18n="confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>
